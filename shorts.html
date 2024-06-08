@@ -168,22 +168,22 @@
         </div>
         <section class="video_input_section layout_padding">
           <div class="container">
-            <form id="uploadForm" action="YOUR_SERVER_ENDPOINT" method="post" enctype="multipart/form-data">
+            <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
               <div class="form-group">
                 <label for="videoUpload">비디오 파일 선택:</label>
                 <div id="drop-area" class="drop-area">
                     <p class="drop-text">파일을 드래그 앤 드롭 하거나 클릭하여 파일을 선택하세요...</p>
                     <input type="file" class="form-control-file" id="videoUpload" name="videoUpload" required>
                 </div>
-            </div>
+              </div>
               <div class="form-group">
                   <label for="videoLength">영상 길이 (초):</label>
                   <input type="number" class="form-control" id="videoLength" name="videoLength" placeholder="예: 30" required>
               </div>
-              <div class="form-group">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+              <div class="form-group text-right">
+                  <button type="submit" class="btn btn-primary animated-button">Submit</button>
               </div>
-          </form>
+            </form>
           </div>
         </section>
       </div>
@@ -216,6 +216,40 @@
         margin-bottom: 0;
         font-size: 16px;
         color: #007bff;
+    }
+    .animated-button {
+        position: relative;
+        display: inline-block;
+        padding: 10px 30px;
+        font-size: 16px;
+        color: #fff;
+        text-transform: uppercase;
+        text-align: center;
+        letter-spacing: 1px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: background-color 0.4s;
+    }
+    .animated-button::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background: rgba(255, 255, 255, 0.15);
+        transition: all 0.6s ease-in-out;
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+    }
+    .animated-button:hover {
+        background-color: #0056b3;
+    }
+    .animated-button:hover::before {
+        transform: translate(-50%, -50%) scale(1);
     }
 </style>
 
