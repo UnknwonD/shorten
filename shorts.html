@@ -166,16 +166,39 @@
             비디오 파일과 원하는 영상 길이를 입력해주시면 AI가 shorts 영상을 제작해줍니다.
           </p>
         </div>
-        
+        <section class="video_input_section layout_padding">
+          <div class="container">
+            <form action="YOUR_SERVER_ENDPOINT" method="post" enctype="multipart/form-data">
+              <div class="form-group">
+                  <label for="videoUpload">비디오 파일 선택:</label>
+                  <div class="custom-file">
+                      <input type="file" class="custom-file-input" id="videoUpload" name="videoUpload" required>
+                      <label class="custom-file-label" for="videoUpload">파일을 선택하세요...</label>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="videoLength">영상 길이 (초):</label>
+                  <input type="number" class="form-control" id="videoLength" name="videoLength" placeholder="예: 30" required>
+              </div>
+              <div class="form-group">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </form>
+          </div>
+        </section>
       </div>
     </div>
   </section>
 
   <!-- end service section -->
-
-
-
-
+<!-- Add this script to enable the display of the selected file name -->
+<script>
+  document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+      var fileName = document.getElementById("videoUpload").files[0].name;
+      var nextSibling = e.target.nextElementSibling;
+      nextSibling.innerText = fileName;
+  });
+</script>
   <!-- info section -->
 
   <section class="info_section layout_padding2">
