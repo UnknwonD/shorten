@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+
+<section class="service_section layout_padding">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>Waiting for AI Video</h2>
+      <p>비디오가 만들어지고 있습니다. 잠시만 기다려주세요 !</p>
+      <div class="loader loader-black loader-5"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .loader {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 3em;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+  }
+  .loader,
+  .loader:before,
+  .loader:after {
+    animation: 1s infinite ease-in-out;
+  }
+  .loader:before,
+  .loader:after {
+    width: 100%; 
+    height: 100%;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .loader-black { background-color: #092355; }
+
+  /* Loader 5 */
+  .loader-5 {
+    animation: loader5 1s infinite linear;
+  }
+
+  @keyframes loader5 {
+    0% { transform: rotate(0deg); border-radius: 50%; }
+    50% { transform: rotate(90deg); border-radius: 0%; }
+    100% { transform: rotate(180deg); border-radius: 50%; }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var filename = "{{ filename }}";
+    var videoLength = "{{ video_length }}";
+    var outroLength = "{{ outro_length }}";
+
+    var url = `/process_video?filename=${filename}&video_length=${videoLength}&outro_length=${outroLength}`;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        var filename = data.filename;
+        window.location.href = `/results?filename=${filename}`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  });
+</script>
+
+{% endblock %}
