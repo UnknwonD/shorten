@@ -168,14 +168,14 @@
         </div>
         <section class="video_input_section layout_padding">
           <div class="container">
-            <form action="YOUR_SERVER_ENDPOINT" method="post" enctype="multipart/form-data">
+            <form id="uploadForm" action="YOUR_SERVER_ENDPOINT" method="post" enctype="multipart/form-data">
               <div class="form-group">
-                  <label for="videoUpload">비디오 파일 선택:</label>
-                  <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="videoUpload" name="videoUpload" required>
-                      <label class="custom-file-label" for="videoUpload">파일을 선택하세요...</label>
-                  </div>
-              </div>
+                <label for="videoUpload">비디오 파일 선택:</label>
+                <div id="drop-area" class="drop-area">
+                    <p class="drop-text">파일을 드래그 앤 드롭 하거나 클릭하여 파일을 선택하세요...</p>
+                    <input type="file" class="form-control-file" id="videoUpload" name="videoUpload" required>
+                </div>
+            </div>
               <div class="form-group">
                   <label for="videoLength">영상 길이 (초):</label>
                   <input type="number" class="form-control" id="videoLength" name="videoLength" placeholder="예: 30" required>
@@ -183,7 +183,7 @@
               <div class="form-group">
                   <button type="submit" class="btn btn-primary">Submit</button>
               </div>
-            </form>
+          </form>
           </div>
         </section>
       </div>
@@ -191,15 +191,70 @@
   </section>
 
   <!-- end service section -->
-<!-- Add this script to enable the display of the selected file name -->
+  <style>
+    .drop-area {
+        border: 2px dashed #007bff;
+        padding: 10%;
+        border-radius: 5px;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+    }
+    .drop-area input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .drop-area.dragover {
+        background-color: #f1f1f1;
+    }
+    .drop-text {
+        margin-bottom: 0;
+        font-size: 16px;
+        color: #007bff;
+    }
+</style>
+
 <script>
-  document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-      var fileName = document.getElementById("videoUpload").files[0].name;
-      var nextSibling = e.target.nextElementSibling;
-      nextSibling.innerText = fileName;
-  });
+    (function() {
+        var dropArea = document.getElementById('drop-area');
+        var fileInput = document.getElementById('videoUpload');
+
+        dropArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropArea.classList.add('dragover');
+        });
+
+        dropArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropArea.classList.remove('dragover');
+        });
+
+        dropArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropArea.classList.remove('dragover');
+            var files = e.dataTransfer.files;
+            fileInput.files = files;
+            document.querySelector('.drop-text').textContent = files[0].name;
+        });
+
+        dropArea.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function() {
+            var files = fileInput.files;
+            document.querySelector('.drop-text').textContent = files[0].name;
+        });
+    })();
 </script>
-  <!-- info section -->
 
   <section class="info_section layout_padding2">
     <div class="container">
