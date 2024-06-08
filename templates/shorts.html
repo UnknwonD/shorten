@@ -75,7 +75,7 @@
                       확실한 하이라이트를 찾아 빠르게 영상을 만들어 드립니다.
                     </p>
                     <div class="btn-box">
-                      <a href="shorts.html" class="btn1">
+                      <a href="" class="btn1">
                         Read More
                       </a>
                     </div>
@@ -103,7 +103,7 @@
                       영상을 요약하여 이를 제공해줍니다.
                     </p>
                     <div class="btn-box">
-                      <a href="summary.html" class="btn1">
+                      <a href="" class="btn1">
                         Read More
                       </a>
                     </div>
@@ -131,7 +131,7 @@
                       인공지능 모델이 빠르고 간편하게 편집점을 잡아드립니다.
                     </p>
                     <div class="btn-box">
-                      <a href="editing_point.html" class="btn1">
+                      <a href="" class="btn1">
                         Read More
                       </a>
                     </div>
@@ -146,11 +146,6 @@
             </div>
           </div>
         </div>
-        <ol class="carousel-indicators">
-          <li data-target="#customCarousel1" data-slide-to="0" class="active"></li>
-          <li data-target="#customCarousel1" data-slide-to="1"></li>
-          <li data-target="#customCarousel1" data-slide-to="2"></li>
-        </ol>
       </div>
 
     </section>
@@ -160,131 +155,170 @@
 
   <!-- service section -->
 
-  <section class="service_section layout_padding">
-    <div class="service_container">
-      <div class="container ">
-        <div class="heading_container heading_center">
-          <h2>
-            Our <span>Services</span>
-          </h2>
-          <p>
-            본 서비스는 아래의 총 3개의 서비스를 사용자에게 제공합니다.
-          </p>
+ <!-- service section -->
+<section class="service_section layout_padding">
+  <div class="container">
+    <div class="heading_container heading_center">
+      <h2>Video Processing Service</h2>
+      <p>비디오 파일을 업로드하고 원하는 길이와 아웃트로 길이를 설정하여 처리된 비디오를 확인하고 다운로드하세요.</p>
+    </div>
+    <form id="uploadForm" action="/upload_shorts" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="videoLength">영상 길이 (초):</label>
+        <input type="number" class="form-control" id="videoLength" name="videoLength" placeholder="예: 30" required>
+      </div>
+      <div class="form-group">
+        <label for="outroLength">아웃트로 길이 (초):</label>
+        <input type="number" class="form-control" id="outroLength" name="outroLength" placeholder="예: 21" value="0" required>
+      </div>
+      <div class="form-group">
+        <label for="videoUpload">비디오 파일 선택:</label>
+        <div id="drop-area" class="drop-area">
+          <p class="drop-text">파일을 드래그 앤 드롭 하거나 클릭하여 파일을 선택하세요...</p>
+          <input type="file" class="form-control-file" id="videoUpload" name="videoUpload" required>
         </div>
-        <div class="row">
-          <div class="col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/s1.png" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Shorts Making
-                </h5>
-                <p>
-                  매우 빠르고 강력한 AI 기술을 활용하여 Shorts 비디오를 만들어줍니다. <br>
-                  원하는 길이의 영상을 만들 수 있습니다.
-                </p>
-                <div class="btn-box">
-                  <a href="shorts.html">
-                    Try
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/s2.png" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Summrize Video
-                </h5>
-                <p>
-                  빠르게 영상을 요약하여 사용자에게 제공합니다.
-                  제공되는 결과물을 통해 영상 내의 내용을 요약하고 빠르게 확인할 수 있습니다.
-                </p>
-                <div class="btn-box">
-                  <a href="summary.html">
-                    Try
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 ">
-            <div class="box ">
-              <div class="img-box">
-                <img src="images/s3.png" alt="">
-              </div>
-              <div class="detail-box">
-                <h5>
-                  Find Editing Point
-                </h5>
-                <p>
-                  풀 영상의 편집을 빠르고 용이하게 만들기 위해서, 영상 내의 편집점을 잡아 제공합니다. 시간대와 장면을 확인할 수 있습니다.
-                </p>
-                <div class="btn-box">
-                  <a href="editing_point.html">
-                    Try
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      </div>
+      <div class="form-group text-right">
+        <button type="submit" class="btn btn-primary animated-button">Submit</button>
+      </div>
+    </form>
+
+    <div id="result-section" class="mt-5" style="display: none;">
+      <h2 class="text-center">Processed Video</h2>
+      <div class="text-center mt-4">
+        <video id="processed-video" width="600" controls>
+          <source src="" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="text-center mt-4">
+        <a id="download-link" href="#" class="btn btn-primary">Download Video</a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+<!-- end service section -->
 
-  <!-- end service section -->
+<style>
+  .drop-area {
+    border: 2px dashed #007bff;
+    padding: 10%;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+  }
+  .drop-area input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .drop-area.dragover {
+    background-color: #f1f1f1;
+  }
+  .drop-text {
+    margin-bottom: 0;
+    font-size: 16px;
+    color: #007bff;
+  }
+  .animated-button {
+    position: relative;
+    display: inline-block;
+    padding: 10px 30px;
+    font-size: 16px;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 1px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color 0.4s;
+  }
+  .animated-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    height: 300%;
+    background: rgba(255, 255, 255, 0.15);
+    transition: all 0.6s ease-in-out;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  .animated-button:hover {
+    background-color: #0056b3;
+  }
+  .animated-button:hover::before {
+    transform: translate(-50%, -50%) scale(1);
+  }
+</style>
 
+<script>
+  (function() {
+    var dropArea = document.getElementById('drop-area');
+    var fileInput = document.getElementById('videoUpload');
 
-  <!-- about section -->
+    dropArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.classList.add('dragover');
+    });
 
-  <section class="about_section layout_padding">
-    <div class="container  ">
-      <div class="heading_container heading_center">
-        <h2>
-          About <span>Me</span>
-        </h2>
-        <p>
-          저는 인공지능 모델 개발 뿐만 아니라, 다양한 데이터를 다루는 개발자 이대호입니다.
-        </p>
-      </div>
-      <div class="row">
-        <div class="col-md-6 ">
-          <div class="img-box">
-            <img src="images/about-img.png" alt="">
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="detail-box">
-            <h3>
-              Daeho Lee
-            </h3>
-            <p>
-              데이터 및 인공지능 개발자입니다. 각종 프로젝트와 개인 토이 프로젝트를 바탕으로 머신러닝과 데이터 분석 관련 이해를 높였습니다. 현재 각종 데이터를 활용한 다양한 프로젝트를 함께 진행 중에 있습니다.
-            </p>
-            <p>
-              하단의 버튼을 통해서 더 자세히 확인하실 수 있습니다 !
-            </p>
-            <a href="https://daeho5000.notion.site/Nice-to-meet-you-1697d14e79e8471fb9c566a6951c418d">
-              Read More
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    dropArea.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.classList.remove('dragover');
+    });
 
-  <!-- end about section -->
+    dropArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.classList.remove('dragover');
+      var files = e.dataTransfer.files;
+      fileInput.files = files;
+      document.querySelector('.drop-text').textContent = files[0].name;
+    });
 
+    dropArea.addEventListener('click', function() {
+      fileInput.click();
+    });
 
+    fileInput.addEventListener('change', function() {
+      var files = fileInput.files;
+      document.querySelector('.drop-text').textContent = files[0].name;
+    });
+  })();
+</script>
 
-  <!-- info section -->
+<script>
+  document.getElementById('uploadForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var formData = new FormData(this);
+    fetch('/upload_shorts', {
+      method: 'POST',
+      body: formData
+    }).then(response => response.json())
+    .then(data => {
+      var filename = data.filename;
+      var videoElement = document.getElementById('processed-video');
+      var downloadLink = document.getElementById('download-link');
+      videoElement.src = `/processed_videos/${filename}`;
+      downloadLink.href = `/processed_videos/${filename}`;
+      document.getElementById('result-section').style.display = 'block';
+    }).catch(error => {
+      console.error('Error:', error);
+    });
+  });
+</script>
 
   <section class="info_section layout_padding2">
     <div class="container">

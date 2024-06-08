@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, send_from_directory
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory,jsonify
 import os
 from werkzeug.utils import secure_filename
 import cv2
@@ -10,8 +10,10 @@ from process import process_video_data, get_max_values_and_indices, preprocess_s
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'uploads'
+PROCESSED_FOLDER = 'processed_videos'
 ALLOWED_EXTENSIONS = {'mp4', 'avi', 'mov', 'mkv'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['PROCESSED_FOLDER'] = PROCESSED_FOLDER
 
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
@@ -30,6 +32,7 @@ def upload_file():
     file = request.files['videoUpload']
     video_length = request.form['videoLength']
     outro_length = request.form['outroLength']
+    output_path = request.form['outputPath']
     video_ratio = 0
     video_weight = 0.80
     audio_weight = 0.36
@@ -46,19 +49,11 @@ def upload_file():
         sorted_data = get_max_values_and_indices(new_video_data, new_audio_data, video_weight, audio_weight, threshold, video_length, video_ratio, outro_length)
 
         current_time = str(datetime.now().strftime("%Y%m%d_%H%M%S")) + ".mp4"
-            
-        if platform.system() == "Windows":
-            output_path = os.path.join("C:/Users/daeho/OneDrive/문서/GitHub/shorten/", current_time)
-        elif platform.system() == "Darwin":
-            output_path = os.path.join("/Users/idaeho/Documents/GitHub/project_shorts/", current_time)
-
-        preprocess_shorts_only_frame(file_path, sorted_data, output_path)
+        final_output_path = os.path.join(app.config['PROCESSED_FOLDER'], current_time)
         
-        return redirect(url_for('result', filename=current_time))
-
-@app.route('/result/<filename>')
-def result(filename):
-    return render_template('result.html', filename=filename)
+        preprocess_shorts_only_frame(file_path, sorted_data, final_output_path)
+        
+        return jsonify({'filename': current_time})
 
 @app.route('/processed_videos/<filename>')
 def download_file(filename):

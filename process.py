@@ -189,36 +189,36 @@ def preprocess_shorts_only_frame(video_path: str, label: list, output_path: str)
     
     vidcap.release()
 
-    def get_max_values_and_indices(video_data, audio_data, video_weight, audio_weight, threshold, video_length, ratio=None, outro_length=0):
-    
-        # Ensure both arrays have the same length by truncating to the shortest length
-        if outro_length != 0:
-            outro = outro_length // 3
-            min_length = min(video_data.shape[0], audio_data.shape[0]) - outro
-        else:
-            min_length = min(video_data.shape[0], audio_data.shape[0])
-            
-        video_data = video_data[:min_length]
-        audio_data = audio_data[:min_length]
-        
-        if video_length == -1:
-            video_length = int(min_length * ratio)
-            print(video_length)
-        else:
-            video_length = (video_length // 3) # 가장 큰 3초 단위로 정리
-        
-        # Compute ensemble scores
-        ensemble_scores = (video_data * video_weight + audio_data * audio_weight) / (video_weight + audio_weight)
-        ensemble_labels = ensemble_scores.argmax(axis=1)
+def get_max_values_and_indices(video_data, audio_data, video_weight, audio_weight, threshold, video_length, ratio=None, outro_length=0):
 
-        # Apply threshold to label "2"
-        high_confidence_twos = ensemble_scores[:, 2] >= threshold
-        ensemble_labels[high_confidence_twos] = 2
+    # Ensure both arrays have the same length by truncating to the shortest length
+    if outro_length != 0:
+        outro = outro_length // 3
+        min_length = min(video_data.shape[0], audio_data.shape[0]) - outro
+    else:
+        min_length = min(video_data.shape[0], audio_data.shape[0])
         
-        # Format output as (i, label, score)
-        output = [(i, ensemble_labels[i], max(ensemble_scores[i])) for i in range(min_length)]
-        
-        sorted_data = sorted(output, key=lambda x: (x[1], x[2]), reverse=True)
-        sorted_data = sorted(sorted_data[:video_length], key=lambda x: x[0])
-        print(len(sorted_data))
-        return sorted_data
+    video_data = video_data[:min_length]
+    audio_data = audio_data[:min_length]
+    
+    if video_length == -1:
+        video_length = int(min_length * ratio)
+        print(video_length)
+    else:
+        video_length = (video_length // 3) # 가장 큰 3초 단위로 정리
+    
+    # Compute ensemble scores
+    ensemble_scores = (video_data * video_weight + audio_data * audio_weight) / (video_weight + audio_weight)
+    ensemble_labels = ensemble_scores.argmax(axis=1)
+
+    # Apply threshold to label "2"
+    high_confidence_twos = ensemble_scores[:, 2] >= threshold
+    ensemble_labels[high_confidence_twos] = 2
+    
+    # Format output as (i, label, score)
+    output = [(i, ensemble_labels[i], max(ensemble_scores[i])) for i in range(min_length)]
+    
+    sorted_data = sorted(output, key=lambda x: (x[1], x[2]), reverse=True)
+    sorted_data = sorted(sorted_data[:video_length], key=lambda x: x[0])
+    print(len(sorted_data))
+    return sorted_data
