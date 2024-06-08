@@ -58,15 +58,27 @@
 
     var url = `/process_video?filename=${filename}&video_length=${videoLength}&outro_length=${outroLength}`;
 
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        var filename = data.filename;
-        window.location.href = `/results?filename=${filename}`;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    fetch(url, {
+      method: 'GET',
+      redirect: 'manual' // Prevent automatic redirection
+    })
+    .then(response => {
+      console.log('Response status:', response.status);
+      if (response.status === 302 || response.status === 200) {
+        return response.text().then(html => {
+          var redirectUrl = new DOMParser().parseFromString(html, 'text/html').querySelector('a').href;
+          console.log('Redirect URL:', redirectUrl);
+          window.location.href = redirectUrl; // Manually redirect
+        });
+      } else if (response.status === 404) {
+        console.error('Failed to process video: File not found');
+      } else {
+        console.error('Failed to process video:', response.statusText);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
   });
 </script>
 

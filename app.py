@@ -60,6 +60,9 @@ def process_video():
     outro_length = int(request.args.get('outro_length'))
     video_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
 
+    if not os.path.exists(video_path):
+        return jsonify({'error': 'File not found'}), 404
+
     video_ratio = 0
     video_weight = 0.80
     audio_weight = 0.36
