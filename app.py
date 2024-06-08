@@ -28,18 +28,17 @@ def index():
 @app.route('/upload_shorts', methods=['POST'])
 def upload_file():
     if 'videoUpload' not in request.files:
-        return redirect(request.url)
+        return jsonify({'error': 'No file part'}), 400
     file = request.files['videoUpload']
     video_length = request.form['videoLength']
     outro_length = request.form['outroLength']
-    output_path = request.form['outputPath']
     video_ratio = 0
     video_weight = 0.80
     audio_weight = 0.36
     threshold = 0.50
 
     if file.filename == '':
-        return redirect(request.url)
+        return jsonify({'error': 'No selected file'}), 400
     
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
@@ -53,26 +52,20 @@ def upload_file():
         
         preprocess_shorts_only_frame(file_path, sorted_data, final_output_path)
         
-        return jsonify({'filename': current_time})
+        return jsonify({'filename': current_time}), 200
+
+@app.route('/results')
+def results():
+    filename = request.args.get('filename')
+    return render_template('results.html', filename=filename)
 
 @app.route('/processed_videos/<filename>')
 def download_file(filename):
     return send_from_directory(app.config['PROCESSED_FOLDER'], filename)
 
-def process_video(file_path, video_length):
-    # Your preprocessing code here
-    # Example: Convert video to grayscale and save the processed video
-    cap = cv2.VideoCapture(file_path)
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(f'processed_{os.path.basename(file_path)}', fourcc, 20.0, (640, 480), False)
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        out.write(gray)
-    cap.release()
-    out.release()
+@app.route('/shorts')      
+def shorts():
+    return render_template ('shorts.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
