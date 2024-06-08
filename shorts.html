@@ -168,13 +168,17 @@
         </div>
         <section class="video_input_section layout_padding">
           <div class="container">
-            <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+            <form id="uploadForm" action="/upload_shorts" method="post" enctype="multipart/form-data">
               <div class="form-group">
                 <label for="videoUpload">비디오 파일 선택:</label>
                 <div id="drop-area" class="drop-area">
                     <p class="drop-text">파일을 드래그 앤 드롭 하거나 클릭하여 파일을 선택하세요...</p>
                     <input type="file" class="form-control-file" id="videoUpload" name="videoUpload" required>
                 </div>
+              </div>
+              <div class="form-group">
+                <label for="outroLength">아웃트로 길이 (초):</label>
+                <input type="number" class="form-control" id="outroLength" name="outroLength" value="0" placeholder="영상 속에 아웃트로가 있는 경우에만 입력해주세요" required>
               </div>
               <div class="form-group">
                   <label for="videoLength">영상 길이 (초):</label>

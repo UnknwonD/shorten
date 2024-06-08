@@ -1,7 +1,11 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory
 import os
 from werkzeug.utils import secure_filename
 import cv2
+import platform
+from datetime import datetime
+
+from process import process_video_data, get_max_values_and_indices, preprocess_shorts_only_frame
 
 app = Flask(__name__)
 
@@ -19,21 +23,46 @@ def allowed_file(filename):
 def index():
     return render_template('index.html')
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload_shorts', methods=['POST'])
 def upload_file():
     if 'videoUpload' not in request.files:
         return redirect(request.url)
     file = request.files['videoUpload']
     video_length = request.form['videoLength']
+    outro_length = request.form['outroLength']
+    video_ratio = 0
+    video_weight = 0.80
+    audio_weight = 0.36
+    threshold = 0.50
 
     if file.filename == '':
         return redirect(request.url)
+    
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-        process_video(file_path, int(video_length))
-        return redirect(url_for('index'))
+        new_video_data, new_audio_data = process_video_data(file_path)
+        sorted_data = get_max_values_and_indices(new_video_data, new_audio_data, video_weight, audio_weight, threshold, video_length, video_ratio, outro_length)
+
+        current_time = str(datetime.now().strftime("%Y%m%d_%H%M%S")) + ".mp4"
+            
+        if platform.system() == "Windows":
+            output_path = os.path.join("C:/Users/daeho/OneDrive/문서/GitHub/shorten/", current_time)
+        elif platform.system() == "Darwin":
+            output_path = os.path.join("/Users/idaeho/Documents/GitHub/project_shorts/", current_time)
+
+        preprocess_shorts_only_frame(file_path, sorted_data, output_path)
+        
+        return redirect(url_for('result', filename=current_time))
+
+@app.route('/result/<filename>')
+def result(filename):
+    return render_template('result.html', filename=filename)
+
+@app.route('/processed_videos/<filename>')
+def download_file(filename):
+    return send_from_directory(app.config['PROCESSED_FOLDER'], filename)
 
 def process_video(file_path, video_length):
     # Your preprocessing code here

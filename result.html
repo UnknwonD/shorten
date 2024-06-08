@@ -166,17 +166,23 @@
             비디오 파일과 원하는 영상 길이를 입력해주시면 AI가 shorts 영상을 제작해줍니다.
           </p>
         </div>
-        
+        <div class="container mt-5">
+            <h1 class="text-center">Processed Video</h1>
+            <div class="text-center mt-4">
+                <video width="600" controls>
+                    <source src="{{ url_for('download_file', filename=filename) }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div class="text-center mt-4">
+                <a href="{{ url_for('download_file', filename=filename) }}" class="btn btn-primary">Download Video</a>
+            </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- end service section -->
-
-
-
-
-  <!-- info section -->
 
   <section class="info_section layout_padding2">
     <div class="container">
