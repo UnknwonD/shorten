@@ -132,26 +132,4 @@
   })();
 </script>
 
-<script>
-  document.getElementById('uploadForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    var formData = new FormData(this);
-    var videoLength = document.getElementById('videoLength').value;
-    var outroLength = document.getElementById('outroLength').value;
-    var filename = document.getElementById('videoUpload').files[0].name;
-
-    var url = `/loading?filename=${filename}&video_length=${videoLength}&outro_length=${outroLength}`;
-
-    fetch('/upload_shorts', {
-      method: 'POST',
-      body: formData
-    }).then(() => {
-      window.location.href = url;
-    }).catch(error => {
-      console.error('Error:', error);
-    });
-  });
-</script>
-
 {% endblock %}

@@ -51,9 +51,10 @@ def loading():
     filename = request.args.get('filename')
     video_length = request.args.get('video_length')
     outro_length = request.args.get('outro_length')
+    
     return render_template('loading.html', filename=filename, video_length=video_length, outro_length=outro_length)
 
-@app.route('/process_video')
+@app.route('/process_video', methods=['GET'])
 def process_video():
     filename = request.args.get('filename')
     video_length = int(request.args.get('video_length'))
