@@ -121,10 +121,6 @@
       document.querySelector('.drop-text').textContent = files[0].name;
     });
 
-    dropArea.addEventListener('click', function() {
-      fileInput.click();
-    });
-
     fileInput.addEventListener('change', function() {
       var files = fileInput.files;
       document.querySelector('.drop-text').textContent = files[0].name;

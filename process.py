@@ -178,7 +178,7 @@ def preprocess_shorts_only_frame(video_path: str, label: list, output_path: str)
         height, width, layers = sequences[0].shape
         size = (width, height)
         if platform.system() == "Windows":
-            out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, size)
+            out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'X264'), fps, size)
         elif platform.system() == "Darwin":
             out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*'X264'), fps, size)
 

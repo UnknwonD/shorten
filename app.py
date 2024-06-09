@@ -24,6 +24,11 @@ if not os.path.exists(PROCESSED_FOLDER):
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.before_request
+def log_request_info():
+    app.logger.debug('Headers: %s', request.headers)
+    app.logger.debug('Body: %s', request.get_data())
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -64,6 +69,7 @@ def process_video():
     if not os.path.exists(video_path):
         return jsonify({'error': 'File not found'}), 404
 
+    # Processing logic here...
     video_ratio = 0
     video_weight = 0.80
     audio_weight = 0.36
@@ -77,9 +83,11 @@ def process_video():
 
     preprocess_shorts_only_frame(video_path, sorted_data, final_output_path)
     
-    return redirect(url_for('results', filename=current_time))
+    # Return a JSON response indicating that processing is complete
+    return jsonify({'status': 'complete', 'filename': current_time})
 
-@app.route('/results')
+
+@app.route('/results', methods=['GET'])
 def results():
     filename = request.args.get('filename')
     return render_template('results.html', filename=filename)
@@ -91,6 +99,18 @@ def download_file(filename):
 @app.route('/shorts')
 def shorts():
     return render_template('shorts.html')
+
+@app.errorhandler(400)
+def bad_request_error(error):
+    return jsonify({'error': 'Bad Request'}), 400
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return jsonify({'error': 'Not Found'}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({'error': 'Internal Server Error'}), 500
 
 if __name__ == '__main__':
     app.run(debug=False)
