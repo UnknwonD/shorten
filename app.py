@@ -7,6 +7,18 @@ from datetime import datetime
 
 from process import process_video_data, get_max_values_and_indices, preprocess_shorts_only_frame
 
+### -- Youtube -- ###
+from pytube import YouTube
+
+def downloadYouTube(videourl, path):
+    yt = YouTube(videourl)
+    yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+    if not os.path.exists(path):
+        os.makedirs(path)
+    yt.download(path)
+### -- Youtube END -- ###
+
+
 app = Flask(__name__)
 
 UPLOAD_FOLDER = 'uploads'
