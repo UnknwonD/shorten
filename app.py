@@ -6,8 +6,6 @@ import platform
 from datetime import datetime
 
 from process import process_video_data, get_max_values_and_indices, preprocess_shorts_only_frame
-
-### -- Youtube -- ###
 from pytube import YouTube
 
 def downloadYouTube(videourl, path):
@@ -16,7 +14,6 @@ def downloadYouTube(videourl, path):
     if not os.path.exists(path):
         os.makedirs(path)
     yt.download(path)
-### -- Youtube END -- ###
 
 
 app = Flask(__name__)
@@ -47,21 +44,32 @@ def index():
 
 @app.route('/upload_shorts', methods=['POST'])
 def upload_file():
-    if 'videoUpload' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-    file = request.files['videoUpload']
     video_length = int(request.form['videoLength'])
     outro_length = int(request.form['outroLength'])
-
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
     
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
+    if 'howVideo' in request.form and request.form['howVideo'] == 'on':
+        youtube_url = request.form['youtubeUrl']
+        try:
+            output_path = os.path.join(app.config['UPLOAD_FOLDER'], "youtube_video.mp4")
+            downloadYouTube(youtube_url, app.config['UPLOAD_FOLDER'])
+            filename = "youtube_video.mp4"
+            return redirect(url_for('loading', filename=filename, video_length=video_length, outro_length=outro_length))
+        except Exception as e:
+            return jsonify({'error': 'Failed to download YouTube video: {}'.format(str(e))}), 400
+    else:
+        if 'videoUpload' not in request.files:
+            return jsonify({'error': 'No file part'}), 400
+        file = request.files['videoUpload']
+
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
         
-        return redirect(url_for('loading', filename=filename, video_length=video_length, outro_length=outro_length))
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(file_path)
+            
+            return redirect(url_for('loading', filename=filename, video_length=video_length, outro_length=outro_length))
 
 @app.route('/loading')
 def loading():

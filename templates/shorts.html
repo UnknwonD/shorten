@@ -19,10 +19,18 @@
         <input type="number" class="form-control" id="outroLength" name="outroLength" placeholder="예: 21" value="0" required>
       </div>
       <div class="form-group">
+        <label for="howVideo">유튜브 링크로 영상 불러오기:</label>
+        <input type="checkbox" id="howVideo" name="howVideo">
+      </div>
+      <div class="form-group" id="youtubeUrlDiv" style="display: none;">
+        <label for="youtubeUrl">유튜브 URL:</label>
+        <input type="url" class="form-control" id="youtubeUrl" name="youtubeUrl" placeholder="예: https://www.youtube.com/watch?v=6cJ3aUsy2jM">
+      </div>
+      <div class="form-group" id="fileUploadDiv">
         <label for="videoUpload">비디오 파일 선택:</label>
         <div id="drop-area" class="drop-area">
           <p class="drop-text">파일을 드래그 앤 드롭 하거나 클릭하여 파일을 선택하세요...</p>
-          <input type="file" class="form-control-file" id="videoUpload" name="videoUpload" required>
+          <input type="file" class="form-control-file" id="videoUpload" name="videoUpload">
         </div>
       </div>
       <div class="form-group text-right">
@@ -96,6 +104,22 @@
 </style>
 
 <script>
+  document.getElementById('howVideo').addEventListener('change', function() {
+    var youtubeUrlDiv = document.getElementById('youtubeUrlDiv');
+    var fileUploadDiv = document.getElementById('fileUploadDiv');
+    if (this.checked) {
+      youtubeUrlDiv.style.display = 'block';
+      fileUploadDiv.style.display = 'none';
+      document.getElementById('videoUpload').removeAttribute('required');
+      document.getElementById('youtubeUrl').setAttribute('required', 'required');
+    } else {
+      youtubeUrlDiv.style.display = 'none';
+      fileUploadDiv.style.display = 'block';
+      document.getElementById('youtubeUrl').removeAttribute('required');
+      document.getElementById('videoUpload').setAttribute('required', 'required');
+    }
+  });
+
   (function() {
     var dropArea = document.getElementById('drop-area');
     var fileInput = document.getElementById('videoUpload');
@@ -119,6 +143,10 @@
       var files = e.dataTransfer.files;
       fileInput.files = files;
       document.querySelector('.drop-text').textContent = files[0].name;
+    });
+
+    dropArea.addEventListener('click', function() {
+      fileInput.click();
     });
 
     fileInput.addEventListener('change', function() {
