@@ -70,7 +70,7 @@ def upload_file():
             file.save(file_path)
             
             return redirect(url_for('loading', filename=filename, video_length=video_length, outro_length=outro_length))
-
+ 
 @app.route('/loading')
 def loading():
     filename = request.args.get('filename')
