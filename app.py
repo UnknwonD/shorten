@@ -89,7 +89,6 @@ def process_video():
     if not os.path.exists(video_path):
         return jsonify({'error': 'File not found'}), 404
 
-    # Processing logic here...
     video_ratio = 0
     video_weight = 0.80
     audio_weight = 0.36
